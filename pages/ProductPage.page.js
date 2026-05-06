@@ -14,9 +14,34 @@ export class ProductPage {
     this.productSorter = page.locator('[data-test="product-sort-container"]');
     this.pageTitle = page.getByText("Products", { exact: true });
     this.openProduct = page.getByText("Sauce Labs Backpack", { exact: true });
+    this.cartButton = page.locator('[data-test="shopping-cart-link"]');
+    this.addToCartBackpack = page.locator(
+      '[data-test="add-to-cart-sauce-labs-backpack"]',
+    );
+    this.addToCartOnesie = page.locator(
+      '[data-test="add-to-cart-sauce-labs-onesie"]',
+    );
+    this.addToCartJacket = page.locator(
+      '[data-test="add-to-cart-sauce-labs-fleece-jacket"]',
+    );
+    this.removeCartBackpack = page.locator(
+      '[data-test="remove-sauce-labs-backpack"]',
+    );
+    this.removeCartOnsie = page.locator(
+      '[data-test="remove-sauce-labs-onesie"]',
+    );
+    this.removeCartJacket = page.locator(
+      '[data-test="remove-sauce-labs-fleece-jacket"]',
+    );
+    this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
   }
 
   //Test Actions
+  //Reload the page
+  async reloadPage() {
+    await this.page.reload();
+  }
+
   async getProductNames() {
     return await this.productName.allTextContents();
   }
@@ -27,6 +52,27 @@ export class ProductPage {
     return priceTexts.map((priceText) => {
       return Number(priceText.replace("$", ""));
     });
+  }
+
+  //Go to shopping cart page
+  async goToCart() {
+    await this.cartButton.click();
+  }
+
+  //Make the items added to cart
+  async addToCart() {
+    //Add items to cart
+    await this.addToCartBackpack.click();
+    await this.addToCartJacket.click();
+    await this.addToCartOnesie.click();
+  }
+
+  //Remove items from the cart
+  async removeItem() {
+    //remove items from the cart
+    await this.removeCartBackpack.click();
+    await this.removeCartJacket.click();
+    await this.removeCartOnsie.click();
   }
 
   //Assertions
@@ -155,5 +201,46 @@ export class ProductPage {
 
     //The add to cart button should be visible
     await expect(this.addToCartButtons).toBeVisible();
+  }
+
+  //Checks the add to cart buttons
+  async expectAddToCartButtons(condition) {
+    //Add to cart button for the items that is added to cart must not be visible
+    if (condition == "visible") {
+      await expect(this.addToCartBackpack).toBeVisible();
+      await expect(this.addToCartJacket).toBeVisible();
+      await expect(this.addToCartOnesie).toBeVisible();
+    } else if (condition == "hidden") {
+      await expect(this.addToCartBackpack).toBeHidden();
+      await expect(this.addToCartJacket).toBeHidden();
+      await expect(this.addToCartOnesie).toBeHidden();
+    }
+  }
+
+  //Checks the remove button
+  async expectRemoveButtons(condition) {
+    //Remove button for the items that is added to cart must be visible
+    if (condition == "visible") {
+      await expect(this.removeCartBackpack).toBeVisible();
+      await expect(this.removeCartJacket).toBeVisible();
+      await expect(this.removeCartOnsie).toBeVisible();
+    } else if (condition == "hidden") {
+      await expect(this.removeCartBackpack).toBeHidden();
+      await expect(this.removeCartJacket).toBeHidden();
+      await expect(this.removeCartOnsie).toBeHidden();
+    }
+  }
+
+  //Check if the cart badges updates
+  async expectCartBadge(condition) {
+    if (condition == "added") {
+      //The cart badge must be showing and its according number when the item is added to cart
+      await expect(this.cartBadge).toBeVisible();
+      await expect(await this.cartBadge.allTextContents()).toEqual(["3"]);
+    } else if (condition == "removed") {
+      //The cart badge must be gone after removing the items
+      await expect(this.cartBadge).toBeHidden;
+      await expect(await this.cartBadge.allTextContents()).toEqual([]);
+    }
   }
 }

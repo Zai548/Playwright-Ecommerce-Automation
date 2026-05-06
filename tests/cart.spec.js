@@ -15,30 +15,34 @@ test.describe("Testing the cart page", async () => {
   });
 
   test.describe("Testing the add to cart and remove function", async () => {
-    test("Adding and removing item to cart", async ({ page }) => {
+    test("Adding and removing item to cart in product page", async ({
+      page,
+    }) => {
       const cart_page = new CartPage(page);
+      const product_page = new ProductPage(page);
 
-      await cart_page.addToCart();
-      await cart_page.expectAddToCartButtons("hidden");
-      await cart_page.expectRemoveButtons("visible");
+      await product_page.addToCart();
+      await product_page.expectAddToCartButtons("hidden");
+      await product_page.expectRemoveButtons("visible");
 
-      await cart_page.removeItem();
-      await cart_page.expectAddToCartButtons("visible");
-      await cart_page.expectRemoveButtons("hidden");
+      await product_page.removeItem();
+      await product_page.expectAddToCartButtons("visible");
+      await product_page.expectRemoveButtons("hidden");
     });
 
     test("Cart page Testing", async ({ page }) => {
       const cart_page = new CartPage(page);
+      const product_page = new ProductPage(page);
 
-      await cart_page.addToCart();
-      await cart_page.goToCart();
-      await cart_page.expectCartPage();
+      await product_page.addToCart();
+      await product_page.goToCart();
+      await cart_page.expectCartPageLoadsSuccessfully();
       await cart_page.expectCartItems();
 
       await cart_page.goToProductPage();
-      await cart_page.removeItem();
-      await cart_page.goToCart();
-      await cart_page.expectCartPage();
+      await product_page.removeItem();
+      await product_page.goToCart();
+      await cart_page.expectCartPageLoadsSuccessfully();
       await cart_page.expectRemovedItems();
     });
   });
@@ -46,21 +50,24 @@ test.describe("Testing the cart page", async () => {
   test.describe("Testing the cart badge", async () => {
     test("testing cart badge in the product page", async ({ page }) => {
       const cart_page = new CartPage(page);
+      const product_page = new ProductPage(page);
 
-      await cart_page.addToCart();
-      await cart_page.expectCartBadge("added");
-      await cart_page.reloadPage();
-      await cart_page.expectCartBadge("added");
+      await product_page.addToCart();
+      await product_page.expectCartBadge("added");
+      await product_page.reloadPage();
+      await product_page.expectCartBadge("added");
 
-      await cart_page.removeItem();
-      await cart_page.expectCartBadge("removed");
+      await product_page.removeItem();
+      await product_page.expectCartBadge("removed");
     });
 
     test("testing the cart badge in the cart page", async ({ page }) => {
       const cart_page = new CartPage(page);
+      const product_page = new ProductPage(page);
 
-      await cart_page.addToCart();
-      await cart_page.goToCart();
+      await product_page.addToCart();
+      await product_page.goToCart();
+      await cart_page.expectCartPageLoadsSuccessfully();
       await cart_page.expectCartBadge("added");
       await cart_page.reloadPage();
       await cart_page.expectCartBadge("added");

@@ -5,15 +5,6 @@ export class CartPage {
     this.page = page;
 
     //Locators
-    this.addToCartBackpack = page.locator(
-      '[data-test="add-to-cart-sauce-labs-backpack"]',
-    );
-    this.addToCartOnesie = page.locator(
-      '[data-test="add-to-cart-sauce-labs-onesie"]',
-    );
-    this.addToCartJacket = page.locator(
-      '[data-test="add-to-cart-sauce-labs-fleece-jacket"]',
-    );
     this.removeCartBackpack = page.locator(
       '[data-test="remove-sauce-labs-backpack"]',
     );
@@ -23,7 +14,6 @@ export class CartPage {
     this.removeCartJacket = page.locator(
       '[data-test="remove-sauce-labs-fleece-jacket"]',
     );
-    this.cartButton = page.locator('[data-test="shopping-cart-link"]');
     this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
     this.products = page.locator('[data-test="inventory-item"]');
     this.productNames = page.locator('[data-test="inventory-item-name"]');
@@ -39,11 +29,6 @@ export class CartPage {
   }
 
   //Test Actions
-  //Go to shopping cart page
-  async goToCart() {
-    await this.cartButton.click();
-  }
-
   //Go back to product page from cart page
   async goToProductPage() {
     await this.continueShoppingButton.click();
@@ -54,14 +39,6 @@ export class CartPage {
     await this.page.reload();
   }
 
-  //Make the items added to cart
-  async addToCart() {
-    //Add items to cart
-    await this.addToCartBackpack.click();
-    await this.addToCartJacket.click();
-    await this.addToCartOnesie.click();
-  }
-
   //Remove items from the cart
   async removeItem() {
     //remove items from the cart
@@ -70,21 +47,13 @@ export class CartPage {
     await this.removeCartOnsie.click();
   }
 
-  //Assertions
-  //Checks the add to cart buttons
-  async expectAddToCartButtons(condition) {
-    //Add to cart button for the items that is added to cart must not be visible
-    if (condition == "visible") {
-      await expect(this.addToCartBackpack).toBeVisible();
-      await expect(this.addToCartJacket).toBeVisible();
-      await expect(this.addToCartOnesie).toBeVisible();
-    } else if (condition == "hidden") {
-      await expect(this.addToCartBackpack).toBeHidden();
-      await expect(this.addToCartJacket).toBeHidden();
-      await expect(this.addToCartOnesie).toBeHidden();
-    }
+  //Proceed to checkout
+  async checkout() {
+    //Click the checkout button
+    await this.checkOutButton.click();
   }
 
+  //Assertions
   //Checks the remove button
   async expectRemoveButtons(condition) {
     //Remove button for the items that is added to cart must be visible
@@ -100,7 +69,7 @@ export class CartPage {
   }
 
   //Check if the cart page loads successfully
-  async expectCartPage() {
+  async expectCartPageLoadsSuccessfully() {
     //User must be in the cart page
     await expect(this.page).toHaveURL("https://www.saucedemo.com/cart.html");
 
