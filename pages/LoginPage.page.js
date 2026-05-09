@@ -40,6 +40,13 @@ export class LoginPage {
   }
 
   //Assertions
+  //Check if the login page loads successfully
+  async expectLoginPage() {
+    await expect(this.page).toHaveURL("https://www.saucedemo.com/");
+    await expect(this.username).toBeVisible();
+    await expect(this.password).toBeVisible();
+    await expect(this.loginButton).toBeVisible();
+  }
   //Assert if successfully login
   async assertLoginSuccessful() {
     await expect(this.page).toHaveURL(
